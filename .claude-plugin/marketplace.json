@@ -1,0 +1,15 @@
+{
+  "name": "claude-kit",
+  "owner": {
+    "name": "James Middleton",
+    "email": "james@midz.dev"
+  },
+  "description": "Self-hosted marketplace for James's Claude Code primitives.",
+  "plugins": [
+    {
+      "name": "claude-kit",
+      "source": "./",
+      "description": "Hooks and other configurable Claude Code primitives."
+    }
+  ]
+}

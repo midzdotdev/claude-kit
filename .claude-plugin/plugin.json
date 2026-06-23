@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
+  "name": "claude-kit",
+  "version": "0.1.0",
+  "description": "James's collection of Claude Code primitives — hooks and other configurable bits.",
+  "author": {
+    "name": "James Middleton",
+    "email": "james@midz.dev"
+  },
+  "homepage": "https://github.com/midzdotdev/claude-kit",
+  "repository": "https://github.com/midzdotdev/claude-kit",
+  "license": "MIT",
+  "keywords": ["claude-code", "hooks", "context", "compact"],
+  "hooks": "./hooks/hooks.json"
+}
