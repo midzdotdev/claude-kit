@@ -1,24 +1,26 @@
 {
-  "Stop": [
-    {
-      "matcher": "",
-      "hooks": [
-        {
-          "type": "command",
-          "command": "\"${CLAUDE_PLUGIN_ROOT}/scripts/context-threshold-check.sh\""
-        }
-      ]
-    }
-  ],
-  "PostCompact": [
-    {
-      "matcher": "",
-      "hooks": [
-        {
-          "type": "command",
-          "command": "\"${CLAUDE_PLUGIN_ROOT}/scripts/context-threshold-clear-flag.sh\""
-        }
-      ]
-    }
-  ]
+  "hooks": {
+    "Stop": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"${CLAUDE_PLUGIN_ROOT}/scripts/context-threshold-check.sh\""
+          }
+        ]
+      }
+    ],
+    "PostCompact": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"${CLAUDE_PLUGIN_ROOT}/scripts/context-threshold-clear-flag.sh\""
+          }
+        ]
+      }
+    ]
+  }
 }
