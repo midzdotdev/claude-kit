@@ -5,14 +5,10 @@ THRESHOLDS=(300000 500000 700000)
 
 input=$(cat)
 session_id=$(echo "$input" | jq -r '.session_id')
-cwd=$(echo "$input" | jq -r '.cwd')
+jsonl=$(echo "$input" | jq -r '.transcript_path')
 
 [ -z "$session_id" ] || [ "$session_id" = "null" ] && exit 0
-[ -z "$cwd" ] || [ "$cwd" = "null" ] && exit 0
-
-slug=$(echo "$cwd" | sed 's#/#-#g')
-jsonl="$HOME/.claude/projects/$slug/$session_id.jsonl"
-
+[ -z "$jsonl" ] || [ "$jsonl" = "null" ] && exit 0
 [ -f "$jsonl" ] || exit 0
 
 flag="/tmp/claude-ctx-warned-$session_id"
