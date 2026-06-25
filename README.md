@@ -49,6 +49,29 @@ turn is the behaviour we're validating. On wake it emits the sentinel
 `CLAUDE-KEEPALIVE-PROOF-7Q2K`. Smoke-test the wake path without a real limit via
 `KEEPALIVE_TEST_DELAY=20`.
 
+**Known limitation:** a Claude-started background task does **not** survive a session
+reload/continuation (context summarization, app restart) — which a long session hits
+before the 5-hour limit. So the in-session keepalive is unreliable for the real case;
+prefer the launchd watcher below.
+
+### 5-hour-limit watcher (launchd) — `/limit-watch`
+
+External LaunchAgent that survives session reloads, app restarts, and the limit
+interruption (launchd owns it, not the Claude process). It runs every ~2 min,
+scans recently-modified transcripts for any whose latest turn ended on
+`You've hit your session limit · resets <time>`, and once that reset has passed
+resumes the session **headlessly**:
+
+```
+claude -p --resume <session_id> "The usage limit has reset. Continue…"
+```
+
+Install: `/limit-watch` (runs `scripts/install-limit-watch.sh`; `uninstall` to remove).
+The reset moment is anchored to the limit-hit timestamp in the transcript, so it's
+stable across the periodic re-scans. Fires are idempotent (a `handled/<sid>-<reset>`
+marker). Resume output lands in `~/.claude/claude-kit/resume-<session_id>.log`, **not**
+your live session — this trades same-session continuation for reliability.
+
 ## Layout
 
 ```
@@ -62,7 +85,9 @@ commands/
 scripts/
   context-threshold-check.sh
   context-threshold-clear-flag.sh
-  claude-keepalive.sh
+  claude-keepalive.sh        # in-session keepalive (fragile; see note)
+  claude-limit-watch.sh      # external launchd watcher (robust)
+  install-limit-watch.sh     # installs the LaunchAgent
 ```
 
 ## Requirements

@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "claude-kit",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "James's collection of Claude Code primitives — hooks and other configurable bits.",
   "author": {
     "name": "James Middleton",
