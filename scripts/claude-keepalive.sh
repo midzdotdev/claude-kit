@@ -13,6 +13,14 @@
 
 set -uo pipefail
 
+# Keep the machine awake for the whole armed lifetime so a multi-hour cooldown
+# wait isn't frozen by system sleep. Re-exec once under caffeinate (macOS).
+# Note: caffeinate can't override clamshell (lid-closed) sleep on battery.
+if [ -z "${KEEPALIVE_CAFFEINATED:-}" ] && command -v caffeinate >/dev/null 2>&1; then
+  export KEEPALIVE_CAFFEINATED=1
+  exec caffeinate -dimsu "$0" "$@"
+fi
+
 POLL="${KEEPALIVE_POLL:-60}"
 BUFFER="${KEEPALIVE_BUFFER:-90}"
 SENTINEL="CLAUDE-KEEPALIVE-PROOF-7Q2K"
