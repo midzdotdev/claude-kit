@@ -33,6 +33,22 @@ prompting Claude to ask whether you'd like to `/compact`.
 State is a single flag file at `/tmp/claude-ctx-warned-<session_id>` recording the
 highest tier already warned.
 
+### 5-hour-limit keepalive (PoC) — `/keepalive`
+
+In-session auto-resume after the 5-hour usage limit. You arm it (via `/keepalive`,
+which has Claude launch `scripts/claude-keepalive.sh` as a background task). The
+watcher polls this session's transcript; when the
+`You've hit your session limit · resets <time>` error appears, it waits until the
+stated reset time (+buffer) and exits. Because the harness re-invokes Claude when a
+Claude-started background task finishes, that exit **wakes the same session** to
+continue — no headless run, no launchd.
+
+Constraints (PoC): arm it *before* hitting the limit (a limited session can't start
+anything); the terminal must stay open; and re-invocation after a limit-terminated
+turn is the behaviour we're validating. On wake it emits the sentinel
+`CLAUDE-KEEPALIVE-PROOF-7Q2K`. Smoke-test the wake path without a real limit via
+`KEEPALIVE_TEST_DELAY=20`.
+
 ## Layout
 
 ```
@@ -41,9 +57,12 @@ highest tier already warned.
   marketplace.json   # makes this repo self-installable
 hooks/
   hooks.json         # Stop + PostCompact wiring
+commands/
+  keepalive.md       # /keepalive — arm the 5h-limit watcher
 scripts/
   context-threshold-check.sh
   context-threshold-clear-flag.sh
+  claude-keepalive.sh
 ```
 
 ## Requirements
